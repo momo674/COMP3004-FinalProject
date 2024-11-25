@@ -1,71 +1,72 @@
+
 {
-    "Users": [
-        {
-            "Country": "Canada",
-            "DayOfBirth": 15,
-            "Email": "mohparrot@gmail.com",
-            "FirstName": "Mohamad",
-            "Gender": "M",
-            "Height": 180,
-            "LastName": "Radaideh",
-            "MonthOfBirth": 9,
-            "Password": "123poop",
-            "Weight": 100,
-            "YearOfBirth": 2004
-        },
-        {
-            "Country": "Canada",
-            "DayOfBirth": 1,
-            "Email": "tmp_Email_1",
-            "FirstName": "NA",
-            "Gender": "NA",
-            "Height": 0,
-            "LastName": "NA",
-            "MonthOfBirth": 1,
-            "Password": "tmp_Password_1",
-            "Weight": 0,
-            "YearOfBirth": 1000
-        },
-        {
-            "Country": "Canada",
-            "DayOfBirth": 1,
-            "Email": "tmp_Email_2",
-            "FirstName": "NA",
-            "Gender": "NA",
-            "Height": 0,
-            "LastName": "NA",
-            "MonthOfBirth": 1,
-            "Password": "tmp_Password_2",
-            "Weight": 0,
-            "YearOfBirth": 1000
-        },
-        {
-            "Country": "Canada",
-            "DayOfBirth": 1,
-            "Email": "tmp_Email_3",
-            "FirstName": "NA",
-            "Gender": "NA",
-            "Height": 0,
-            "LastName": "NA",
-            "MonthOfBirth": 1,
-            "Password": "tmp_Password_3",
-            "Weight": 0,
-            "YearOfBirth": 1000
-        },
-        {
-            "Country": "Canada",
-            "DayOfBirth": 1,
-            "Email": "tmp_Email_4",
-            "FirstName": "NA",
-            "Gender": "NA",
-            "Height": 0,
-            "LastName": "NA",
-            "MonthOfBirth": 1,
-            "Password": "tmp_Password_4",
-            "Weight": 0,
-            "YearOfBirth": 1000
-        }
-    ],
-    "currentUsers": 1,
-    "maxUsers": 5
+  "maxUsers" : 5,
+  "currentUsers": 0,
+  "Users": [
+    {
+        "Email" : "tmp_Email_0",
+        "Password" : "tmp_Password_0",
+        "FirstName" : "NA",
+        "LastName" : "NA",
+        "Gender" : "NA",
+        "Weight" : 0.0,
+        "Height" : 0.0,
+        "DayOfBirth" : 1,
+        "MonthOfBirth" : 1,
+        "YearOfBirth" : 1000,
+        "Country" : "Canada"
+    },
+    {
+        "Email" : "tmp_Email_1",
+        "Password" : "tmp_Password_1",
+        "FirstName" : "NA",
+        "LastName" : "NA",
+        "Gender" : "NA",
+        "Weight" : 0.0,
+        "Height" : 0.0,
+        "DayOfBirth" : 1,
+        "MonthOfBirth" : 1,
+        "YearOfBirth" : 1000,
+        "Country" : "Canada"
+    },
+    {
+        "Email" : "tmp_Email_2",
+        "Password" : "tmp_Password_2",
+        "FirstName" : "NA",
+        "LastName" : "NA",
+        "Gender" : "NA",
+        "Weight" : 0.0,
+        "Height" : 0.0,
+        "DayOfBirth" : 1,
+        "MonthOfBirth" : 1,
+        "YearOfBirth" : 1000,
+        "Country" : "Canada"
+    },
+    {
+        "Email" : "tmp_Email_3",
+        "Password" : "tmp_Password_3",
+        "FirstName" : "NA",
+        "LastName" : "NA",
+        "Gender" : "NA",
+        "Weight" : 0.0,
+        "Height" : 0.0,
+        "DayOfBirth" : 1,
+        "MonthOfBirth" : 1,
+        "YearOfBirth" : 1000,
+        "Country" : "Canada"
+    },
+    {
+        "Email" : "tmp_Email_4",
+        "Password" : "tmp_Password_4",
+        "FirstName" : "NA",
+        "LastName" : "NA",
+        "Gender" : "NA",
+        "Weight" : 0.0,
+        "Height" : 0.0,
+        "DayOfBirth" : 1,
+        "MonthOfBirth" : 1,
+        "YearOfBirth" : 1000,
+        "Country" : "Canada"
+    }
+  ]
 }

@@ -11,6 +11,8 @@ public:
                float Height = 0.0, int DayOfBirth = 1, int MonthOfBirth = 1, int YearOfBirth = 1000,
                QString Country = "Canada", QString Email = "NA", QString Password = "NA");
     static bool UserLogin(QString Email, QString Password);
+
+    static int getHealthDataofUser(QString Email, int (&array)[30][24]);
 };
 
 #endif // SYSTEMINTERACTION_H

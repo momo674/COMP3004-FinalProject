@@ -3,6 +3,9 @@
 
 #include <QString>
 
+// Forward declaration of HealthData
+class HealthData;
+
 class UserInfo
 {
 public:
@@ -11,7 +14,7 @@ public:
              float Height = 0.0, int DayOfBirth = 1, int MonthOfBirth = 1, int YearOfBirth = 1000,
              QString Country = "Canada", QString Email = "NA");
     UserInfo(const UserInfo& other);
-
+    ~UserInfo();
     // Getters
     QString getFirstName() const;
     QString getLastName() const;
@@ -47,6 +50,9 @@ private:
     int YearOfBirth;
     QString Country;
     QString Email;
+    // Use a pointer to avoid circular dependency
+    HealthData* data;
+
 };
 
 #endif // USERINFO_H

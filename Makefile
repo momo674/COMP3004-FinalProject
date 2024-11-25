@@ -52,20 +52,21 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = JSONInteractor.cpp \
+SOURCES       = HealthData.cpp \
+		JSONInteractor.cpp \
 		SystemInteraction.cpp \
-		User.cpp \
 		UserInfo.cpp \
 		main.cpp \
 		mainwindow.cpp moc_mainwindow.cpp
-OBJECTS       = JSONInteractor.o \
+OBJECTS       = HealthData.o \
+		JSONInteractor.o \
 		SystemInteraction.o \
-		User.o \
 		UserInfo.o \
 		main.o \
 		mainwindow.o \
 		moc_mainwindow.o
-DIST          = test.json \
+DIST          = HealthDataUser.json \
+		test.json \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -144,13 +145,13 @@ DIST          = test.json \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
-		untitled.pro JSONInteractor.h \
+		untitled.pro HealthData.h \
+		JSONInteractor.h \
 		SystemInteraction.h \
-		User.h \
 		UserInfo.h \
-		mainwindow.h JSONInteractor.cpp \
+		mainwindow.h HealthData.cpp \
+		JSONInteractor.cpp \
 		SystemInteraction.cpp \
-		User.cpp \
 		UserInfo.cpp \
 		main.cpp \
 		mainwindow.cpp
@@ -339,8 +340,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents JSONInteractor.h SystemInteraction.h User.h UserInfo.h mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents JSONInteractor.cpp SystemInteraction.cpp User.cpp UserInfo.cpp main.cpp mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents HealthData.h JSONInteractor.h SystemInteraction.h UserInfo.h mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents HealthData.cpp JSONInteractor.cpp SystemInteraction.cpp UserInfo.cpp main.cpp mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
 
@@ -402,6 +403,12 @@ compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_ui
 
 ####### Compile
 
+HealthData.o: HealthData.cpp HealthData.h \
+		SystemInteraction.h \
+		UserInfo.h \
+		JSONInteractor.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o HealthData.o HealthData.cpp
+
 JSONInteractor.o: JSONInteractor.cpp JSONInteractor.h \
 		UserInfo.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o JSONInteractor.o JSONInteractor.cpp
@@ -411,10 +418,10 @@ SystemInteraction.o: SystemInteraction.cpp SystemInteraction.h \
 		JSONInteractor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SystemInteraction.o SystemInteraction.cpp
 
-User.o: User.cpp User.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o User.o User.cpp
-
-UserInfo.o: UserInfo.cpp UserInfo.h
+UserInfo.o: UserInfo.cpp UserInfo.h \
+		HealthData.h \
+		SystemInteraction.h \
+		JSONInteractor.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o UserInfo.o UserInfo.cpp
 
 main.o: main.cpp mainwindow.h \
