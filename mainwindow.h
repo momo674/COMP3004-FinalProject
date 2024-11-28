@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QStack>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +16,13 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void goToPage(int index);
+    void goBack();
+
 private:
     Ui::MainWindow *ui;
+    QStack<int> pageHistory; // Stack to store page indices for navigation
 };
+
 #endif // MAINWINDOW_H
