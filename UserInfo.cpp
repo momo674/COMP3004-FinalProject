@@ -1,5 +1,6 @@
 #include "UserInfo.h"
-#include "HealthData.h" // Include only in the .cpp file
+#include <QList>
+#include <QDebug>
 
 // Constructor
 UserInfo::UserInfo(QString FirstName, QString LastName, QString Gender, float Weight,
@@ -9,7 +10,12 @@ UserInfo::UserInfo(QString FirstName, QString LastName, QString Gender, float We
       DayOfBirth(DayOfBirth), MonthOfBirth(MonthOfBirth), YearOfBirth(YearOfBirth),
       Country(Country), Email(Email) {
     // Initialize the HealthData pointer
-    data = new HealthData(Email);
+
+    this->validDays = 0;
+    for (int i = 0; i < 30; i++)
+        for (int j = 0; j < 24; j++)
+            this->last30Days[i][j] = -1;
+
 }
 
 // Copy Constructor
@@ -18,16 +24,27 @@ UserInfo::UserInfo(const UserInfo& other)
       Weight(other.Weight), Height(other.Height), DayOfBirth(other.DayOfBirth),
       MonthOfBirth(other.MonthOfBirth), YearOfBirth(other.YearOfBirth),
       Country(other.Country), Email(other.Email) {
-    // Deep copy the HealthData pointer
-    data = new HealthData(*other.data);
+
+    this->validDays = 0;
+}
+int UserInfo::updateHistory(int day, const QList<int>& arr)
+{
+    qDebug() << day;
+    for (int i = 0; i < 24; i++)
+        this->last30Days[day][i] = arr[i];
+    this->validDays++;
+
+    return 0;
+
 }
 
 // Destructor (to avoid memory leaks)
 UserInfo::~UserInfo() {
-    delete data;
+
 }
 
 // Getters and Setters Implementation
+int UserInfo::getValidDays() const { return this->validDays;}
 QString UserInfo::getFirstName() const { return FirstName; }
 QString UserInfo::getLastName() const { return LastName; }
 QString UserInfo::getGender() const { return Gender; }

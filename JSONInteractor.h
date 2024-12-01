@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QDebug>
 #include "UserInfo.h"
+class UserInfo;
 
 class JSONInteractor {
 public:
@@ -35,6 +36,8 @@ public:
 
     // Gets HealthData of user from json
     static QJsonObject healthDataOfUserJsonObject(QString Email);
+
+    static int updateUserHealthData(QString Email, const QList<int>& arr, UserInfo* user);
 
 private:
 

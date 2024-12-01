@@ -50,7 +50,6 @@ bool JSONInteractor::checkIfUserInJson(QString Email, QString Password)
     return false;
 }
 
-
 QJsonDocument JSONInteractor::getUsersJson()
 {
     QString localPath = QDir::currentPath();
@@ -177,6 +176,7 @@ int JSONInteractor::addUserToJson(QJsonObject newObj)
 
     return -1;
 }
+
 int JSONInteractor::loadUsers(UserInfo** arr)
 {
     UserInfo** arrPtr = arr;
@@ -233,4 +233,44 @@ QJsonObject JSONInteractor::healthDataOfUserJsonObject(QString Email)
 
     return QJsonObject(); // Return an empty QJsonObject
 }
+
+int JSONInteractor::updateUserHealthData(QString Email, const QList<int>& arr, UserInfo* user)
+{
+    QJsonDocument doc = getHealthDataJson();
+
+    QJsonObject rootObj = doc.object();
+    QJsonArray usersArray = rootObj["Data"].toArray();
+
+    for (int i = 0; i < 5; i++)
+    {
+        QJsonObject xObj = usersArray[i].toObject();
+        if (xObj["Email"].toString() == Email) {
+            int DayIndex = xObj["Days"].toInt() % 30;
+            QJsonArray HistoryArr = xObj["Log"].toArray();
+
+            QJsonObject DayToUpdate = HistoryArr[DayIndex].toObject();
+            QString day = QStringLiteral("Day%1").arg(DayIndex + 1);
+
+            QJsonArray newDayArr;
+            for (int i = 0; i < 24; i++)
+                newDayArr.append(arr[i]);
+
+            DayToUpdate[day] = newDayArr;
+            HistoryArr[DayIndex] = DayToUpdate;
+            xObj["Days"] = DayIndex + 1;
+            xObj["Log"] = HistoryArr;
+            usersArray[i] = xObj;   // Update the user object in the array.
+
+
+            rootObj["Data"] = usersArray;
+            QJsonDocument updatedDoc(rootObj);
+            user->updateHistory(DayIndex, arr);
+            return writeToHealthDataJson(QJsonDocument(rootObj));
+        }
+
+    }
+
+    return -1;
+}
+
 

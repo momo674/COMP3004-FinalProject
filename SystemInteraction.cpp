@@ -1,11 +1,27 @@
 #include "SystemInteraction.h"
 
-int SystemInteraction::UserRegistration(QString FirstName, QString LastName,  QString Gender, float Weight, float Height, int DayOfBirth, int MonthOfBirth, int YearOfBirth, QString Country, QString Email, QString Password)
+int SystemInteraction::UserRegistration(QString FirstName, QString LastName, QString Gender, float Weight, float Height, int DayOfBirth, int MonthOfBirth, int YearOfBirth, QString Country, QString Email, QString Password, UserInfo** output)
 {
-    UserInfo newUser(FirstName, LastName, Gender, Weight, Height, DayOfBirth, MonthOfBirth, YearOfBirth, Country, Email);
-    QJsonObject newUserObject = JSONInteractor::createJsonObjFromUser(&newUser, Password);
-    return JSONInteractor::addUserToJson(newUserObject);
+    UserInfo* userInfo = new UserInfo(FirstName, LastName, Gender, Weight, Height, DayOfBirth, MonthOfBirth, YearOfBirth, Country, Email);
+
+    // If output is not null, assign the created UserInfo object to it
+    if (output != nullptr)
+    {
+        *output = userInfo;
+        QJsonObject newUserObject = JSONInteractor::createJsonObjFromUser(userInfo, Password);
+        return JSONInteractor::addUserToJson(newUserObject);
+
+
+    }
+    else
+    {
+        QJsonObject newUserObject = JSONInteractor::createJsonObjFromUser(userInfo, Password);
+        delete userInfo; // Free the memory since it's not being returned
+        return JSONInteractor::addUserToJson(newUserObject);
+
+    }
 }
+
 
 bool SystemInteraction::UserLogin(QString Email, QString Password)
 {
@@ -35,4 +51,14 @@ int SystemInteraction::getHealthDataofUser(QString Email, int (&array)[30][24])
     }
 
     return user["Days"].toInt();
+}
+
+int SystemInteraction::userScan(QString Email, UserInfo* user)
+{
+    QList<int> healthData;
+    for (int i = 0; i < 24; i++)
+        healthData.append(rand() % 101);
+
+    //call function to update json
+    return JSONInteractor::updateUserHealthData(Email, healthData, user);
 }
