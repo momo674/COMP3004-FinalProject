@@ -3,6 +3,11 @@
 
 #include <QMainWindow>
 #include <QStack>
+#include "SystemInteraction.h"
+#include <QtCore>
+#include <QtGui>
+#include <QtWidgets>
+//#include <QtCharts>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -19,6 +24,10 @@ public:
 private slots:
     void goToPage(int index);
     void goBack();
+    void handleLogin(); // Slot to handle the Enter button
+    void handleSaveAndCreate(); // Slot to handle Save button
+
+
 
 private:
     Ui::MainWindow *ui;
