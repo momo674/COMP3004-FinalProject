@@ -2,10 +2,6 @@
 #define USERINFO_H
 
 #include <QString>
-
-// Forward declaration of HealthData
-class HealthData;
-
 class UserInfo
 {
 public:
@@ -26,6 +22,7 @@ public:
     int getYearOfBirth() const;
     QString getCountry() const;
     QString getEmail() const;
+    int getValidDays() const;
 
     // Setters
     void setFirstName(const QString& firstName);
@@ -38,6 +35,7 @@ public:
     void setYearOfBirth(int yearOfBirth);
     void setCountry(const QString& country);
     void setEmail(const QString& email);
+    int updateHistory(int day, const QList<int>& arr);
 
 private:
     QString FirstName;
@@ -50,8 +48,10 @@ private:
     int YearOfBirth;
     QString Country;
     QString Email;
-    // Use a pointer to avoid circular dependency
-    HealthData* data;
+
+
+    int last30Days[30][24]; //all of the data (including dummy)
+    int validDays; //the number of days where valid data exists
 
 };
 

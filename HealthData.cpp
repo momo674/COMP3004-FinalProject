@@ -20,3 +20,13 @@ HealthData::HealthData(const HealthData& c)
     this->Email = c.Email;
     this->validDays = SystemInteraction::getHealthDataofUser(this->Email, this->last30Days);
 }
+int HealthData::updateHistory(int day, const QList<int>& arr)
+{
+    int index = day - 1;
+
+    for (int i = 0; i < 24; i++)
+        this->last30Days[index][i] = arr[i];
+    qDebug() << this->last30Days[index][0];
+    return 0;
+
+}
