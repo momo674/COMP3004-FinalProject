@@ -210,7 +210,7 @@ void MainWindow::handleSaveAndCreate()
     int result = SystemInteraction::UserRegistration(firstName, lastName, gender, weight, height, dayOfBirth, monthOfBirth, yearOfBirth, country, email, password);
 
     // Handle the result of registration
-    if (result == -1) { // Assume 0 means success
+    if (result == 0) { // Assume 0 means success
         QMessageBox::information(this, "Registration Successful", "Your profile has been created.");
         // Optionally navigate to another page
         ui->stackedWidget->setCurrentIndex(4); // Example: Navigate to a different page
