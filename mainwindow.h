@@ -7,8 +7,10 @@
 #include <QtCore>
 #include <QtGui>
 #include <QtWidgets>
-//#include <QtCharts>
+#include <QtCharts>
 
+#include "UserInfo.h"
+#include "JSONInteractor.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -27,10 +29,11 @@ private slots:
     void handleLogin(); // Slot to handle the Enter button
     void handleSaveAndCreate(); // Slot to handle Save button
 
-
-
 private:
+    QList<UserInfo*> users;
+    UserInfo* currentUser;
     Ui::MainWindow *ui;
+    void createBarGraphLastScan(QWidget *targetPage);
     QStack<int> pageHistory; // Stack to store page indices for navigation
 };
 

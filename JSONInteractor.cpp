@@ -177,9 +177,9 @@ int JSONInteractor::addUserToJson(QJsonObject newObj)
     return -1;
 }
 
-int JSONInteractor::loadUsers(UserInfo** arr)
+QList<UserInfo*> JSONInteractor::loadUsers()
 {
-    UserInfo** arrPtr = arr;
+    QList<UserInfo*> toReturn;
     QJsonDocument doc = getUsersJson();
     QJsonObject root_obj = doc.object();
     int currentUsers = root_obj["currentUsers"].toInt();
@@ -193,12 +193,11 @@ int JSONInteractor::loadUsers(UserInfo** arr)
 
         if (!email.contains(QString("tmp_Email")))
         {
-            *arrPtr = createUserFromJsonObj(xObj);
-            arrPtr++;
+            toReturn.append(createUserFromJsonObj(xObj));
         }
 
     }
-    return currentUsers;
+    return toReturn;
 }
 
 QJsonObject JSONInteractor::healthDataOfUserJsonObject(QString Email)

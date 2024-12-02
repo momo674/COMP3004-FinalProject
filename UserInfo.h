@@ -2,6 +2,7 @@
 #define USERINFO_H
 
 #include <QString>
+#include <QList>
 class UserInfo
 {
 public:
@@ -23,6 +24,7 @@ public:
     QString getCountry() const;
     QString getEmail() const;
     int getValidDays() const;
+    QList<int> getLastScan() const;
 
     // Setters
     void setFirstName(const QString& firstName);

@@ -6,6 +6,9 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    users = JSONInteractor::loadUsers();
+    currentUser = NULL;
+    qDebug() << users.size();
     ui->setupUi(this);
 
     // Connect the "Create Profile" button to switch to create page
@@ -44,6 +47,70 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::createBarGraphLastScan(QWidget *targetFrame) {
+    // Clear any existing layout or widgets inside the frame
+    if (targetFrame->layout()) {
+        QLayoutItem *item;
+        while ((item = targetFrame->layout()->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+        delete targetFrame->layout();
+    }
+
+    // Get the data for the bar graph (24 elements)
+    QList<int> dataArray = currentUser->getLastScan();
+    qDebug() << dataArray;
+    // Ensure the dataArray has 24 elements (for safety)
+    if (dataArray.size() != 24) {
+        qDebug() << "Error: Data array does not contain exactly 24 elements.";
+        return;
+    }
+
+    // Create QBarSet and populate it with data
+    QtCharts::QBarSet *barSet = new QtCharts::QBarSet("Last Scan");
+    for (int value : dataArray) {
+        *barSet << value;
+    }
+
+    // Create QBarSeries and add the QBarSet
+    QtCharts::QBarSeries *series = new QtCharts::QBarSeries();
+    series->append(barSet);
+
+    // Create QChart and configure it
+    QtCharts::QChart *chart = new QtCharts::QChart();
+    chart->addSeries(series);
+    chart->setTitle("Last Scan Results");
+    chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
+
+    // Configure X-axis for 1 to 24
+    QStringList categories;
+    for (int i = 1; i <= 24; ++i) {
+        categories << QString::number(i);
+    }
+    QtCharts::QBarCategoryAxis *axisX = new QtCharts::QBarCategoryAxis();
+    axisX->append(categories);
+    chart->addAxis(axisX, Qt::AlignBottom);
+    series->attachAxis(axisX);
+
+    // Configure Y-axis for range 0 to 100
+    QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
+    axisY->setRange(0, 100); // Set Y-axis range from 0 to 100
+    axisY->setTitleText("Value (%)");
+    chart->addAxis(axisY, Qt::AlignLeft);
+    series->attachAxis(axisY);
+
+    // Create QChartView for rendering the chart
+    QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // Add QChartView to the frame's layout
+    QVBoxLayout *layout = new QVBoxLayout(targetFrame);
+    layout->addWidget(chartView);
+    targetFrame->setLayout(layout);
+}
+
+
 // Function to navigate to a page and save the previous page in history
 void MainWindow::goToPage(int index){
     int currentIndex = ui->stackedWidget->currentIndex();
@@ -73,12 +140,28 @@ void MainWindow::handleLogin(){
     // Handle login success or failure
     if (success) {
         QMessageBox::information(this, "Login Successful", "Welcome!");
-        // Optionally navigate to another page
-        ui->stackedWidget->setCurrentIndex(4); // Example: Switch to a new page
+
+        //Point to user
+        for (UserInfo* x: users)
+        {
+            if (x->getEmail() == email)
+            {
+                currentUser = x;
+//                SystemInteraction::userScan(x->getEmail(), currentUser);
+                break;
+            }
+        }
+
+        // Navigate to page 4
+        ui->stackedWidget->setCurrentIndex(4);
+
+        // Create the bar graph on page 4
+        createBarGraphLastScan(ui->frame_2); // Replace 'ui->page4' with the appropriate widget name
     } else {
         QMessageBox::warning(this, "Login Failed", "Invalid email or password.");
     }
 }
+
 
 
 void MainWindow::handleSaveAndCreate()
@@ -135,7 +218,5 @@ void MainWindow::handleSaveAndCreate()
         QMessageBox::warning(this, "Registration Failed", "There was an error creating your profile. Please try again.");
     }
 }
-
-
 
 

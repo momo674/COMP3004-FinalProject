@@ -1,6 +1,7 @@
 #ifndef SYSTEMINTERACTION_H
 #define SYSTEMINTERACTION_H
 #include <QString>
+#include <QList>
 #include "UserInfo.h"
 #include "JSONInteractor.h"
 

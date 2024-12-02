@@ -32,7 +32,7 @@ public:
     static int addUserToJson(QJsonObject newObj);
 
     // Loads users from the JSON file into an array of UserInfo pointers
-    static int loadUsers(UserInfo** arr);
+    static QList<UserInfo*> loadUsers();
 
     // Gets HealthData of user from json
     static QJsonObject healthDataOfUserJsonObject(QString Email);
