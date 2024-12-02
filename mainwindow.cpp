@@ -212,8 +212,23 @@ void MainWindow::handleSaveAndCreate()
     // Handle the result of registration
     if (result == 0) { // Assume 0 means success
         QMessageBox::information(this, "Registration Successful", "Your profile has been created.");
-        // Optionally navigate to another page
-        ui->stackedWidget->setCurrentIndex(4); // Example: Navigate to a different page
+        //Point to user
+        this->users = JSONInteractor::loadUsers();
+        for (UserInfo* x: users)
+        {
+            if (x->getEmail() == email)
+            {
+                currentUser = x;
+//                SystemInteraction::userScan(x->getEmail(), currentUser);
+                break;
+            }
+        }
+
+        // Navigate to page 4
+        ui->stackedWidget->setCurrentIndex(4);
+
+        // Create the bar graph on page 4
+        createBarGraphLastScan(ui->frame_2); // Replace 'ui->page4' with the appropriate widget name
     } else {
         QMessageBox::warning(this, "Registration Failed", "There was an error creating your profile. Please try again.");
     }
