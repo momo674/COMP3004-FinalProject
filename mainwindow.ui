@@ -20,7 +20,7 @@
       <property name="currentIndex">
        <number>6</number>
       </property>
-      <widget class="QWidget" name="page">
+      <widget class="QWidget" name="page_1">
        <widget class="QPushButton" name="pushButton_login">
         <property name="geometry">
          <rect>
@@ -773,7 +773,7 @@
           <string>   Instructions</string>
          </property>
         </widget>
-        <widget class="QTextEdit" name="textEdit">
+        <widget class="QTextEdit" name="instructionsLabel">
          <property name="geometry">
           <rect>
            <x>20</x>

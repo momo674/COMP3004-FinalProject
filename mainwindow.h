@@ -39,6 +39,8 @@ private slots:
 
 private:
     // UI and navigation
+    QLabel* completionLabel; // Track the "Scan Complete!" label
+
     Ui::MainWindow *ui;                  // Main UI object
     QList<UserInfo*> users;              // List of user profiles
     UserInfo* currentUser;               // Pointer to the current user

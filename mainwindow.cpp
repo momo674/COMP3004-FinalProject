@@ -8,6 +8,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , completionLabel(nullptr)
     , ui(new Ui::MainWindow)
 {
     users = JSONInteractor::loadUsers();
@@ -17,22 +18,16 @@ MainWindow::MainWindow(QWidget *parent)
     currentStep = 0; // Initialize the current step
     stepTimer = new QTimer(this); // Create a timer for the scanning process
 
-    // Create the "Go Back to Home" button and hide it initially
-    homeButton = new QPushButton("Go Back to Home", this);
-    homeButton->setGeometry(200, 400, 200, 50); // Adjust the position as needed
-    homeButton->hide();
-
-    // Connect the "Continue" button to start the scanning process
+    // Connect "Continue" button to start the scanning process
     connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::startScanningProcess);
-
-    // Connect the timer to the function that updates the step
     connect(stepTimer, &QTimer::timeout, this, &MainWindow::updateScanningStep);
 
-    // Connect the "Go Back to Home" button to reset the frame
-    connect(homeButton, &QPushButton::clicked, this, [this]() {
-        goToPage(4);            // Navigate to home page (Page 4)
-        resetInstructionsFrame(); // Reset the frame to its original state
-    });
+    // Create the "Go Home" button and initially hide it
+    homeButton = new QPushButton("Go Home", ui->frame_3);
+    homeButton->setGeometry(150, 400, 200, 50); // Adjust position as needed
+    homeButton->hide();
+
+
 
     // Your existing connections and initializations
     connect(ui->pushButton_create, &QPushButton::clicked, this, [this]() {
@@ -79,21 +74,85 @@ MainWindow::~MainWindow()
 
 void MainWindow::startScanningProcess()
 {
-    resetInstructionsFrame(); // Clear the frame
-    currentStep = 1;          // Start from step 1
-    stepTimer->start(5000);   // Start the timer (5 seconds per step)
-    updateScanningStep();     // Show the first step
-}
-
-void MainWindow::updateScanningStep()
-{
-    if (currentStep > 24) {
-        stepTimer->stop(); // Stop the timer after the last step
-        homeButton->show(); // Show the "Go Back to Home" button
+    // Ensure frame_3 exists
+    if (!ui->frame_3) {
+        qDebug() << "Error: ui->frame_3 is null.";
         return;
     }
 
-    // Load the pixmap for the current step
+    // Hide all child widgets in frame_3
+    QList<QWidget*> children = ui->frame_3->findChildren<QWidget*>();
+    for (QWidget* child : children) {
+        child->hide(); // Temporarily hide all widgets
+    }
+
+    // Disable pushButton_11 during the scan
+    ui->pushButton_11->setDisabled(true);
+
+    // Start scanning process
+    currentStep = 1;       // Reset the step counter
+    stepTimer->start(1000); // Start the timer to loop through images every 5 seconds
+
+    // Begin with the first step
+    updateScanningStep();
+}
+
+
+
+
+void MainWindow::updateScanningStep()
+{
+    static QLabel* imageLabel = nullptr; // Keep track of the currently displayed image
+
+    // Remove the last image if it exists
+    if (imageLabel) {
+        delete imageLabel;
+        imageLabel = nullptr;
+    }
+
+    if (currentStep > 24) {
+        // End of the scanning process
+        stepTimer->stop(); // Stop the timer
+
+        // Add "Scan Complete!" label if it doesn't exist
+        if (!completionLabel) {
+            completionLabel = new QLabel(ui->frame_3);
+            completionLabel->setText("Scan Complete!");
+            completionLabel->setAlignment(Qt::AlignCenter);
+            completionLabel->setStyleSheet(
+                "color: red; "
+                "font-size: 24px; "
+                "font-weight: bold; "
+                "border: 2px solid black; "
+                "background-color: white; "
+                "padding: 10px;"
+            );
+            completionLabel->setGeometry(ui->frame_3->width() / 2 - 150, 50, 300, 50); // Position above the button
+            completionLabel->show();
+        }
+
+        // Create and show the "Go Home" button
+        homeButton->setText("Go Home");
+        homeButton->show();
+
+        // Connect "Go Home" button to navigate to page_5 and reset frame
+        disconnect(homeButton, nullptr, nullptr, nullptr); // Disconnect previous connections
+        connect(homeButton, &QPushButton::clicked, this, [this]() {
+            if (completionLabel) {
+                delete completionLabel; // Remove the "Scan Complete!" label
+                completionLabel = nullptr;
+            }
+            resetInstructionsFrame(); // Reset the frame
+            goToPage(4);              // Navigate to page_5
+
+            // Re-enable pushButton_11
+            ui->pushButton_11->setEnabled(true);
+        });
+
+        return;
+    }
+
+    // Load and display the current step's image
     QPixmap pixmap(QString(":/images/image%1.png").arg(currentStep));
     if (pixmap.isNull()) {
         qDebug() << "Error: Could not load image for step" << currentStep;
@@ -101,64 +160,52 @@ void MainWindow::updateScanningStep()
         return;
     }
 
-    // Clear the layout
-    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->frame_3->layout());
-    if (!layout) {
-        layout = new QVBoxLayout(ui->frame_3);
-        ui->frame_3->setLayout(layout);
-    }
-
-    QLayoutItem* item;
-    while ((item = layout->takeAt(0)) != nullptr) {
-        if (item->widget()) {
-            delete item->widget();
-        }
-        delete item;
-    }
-
-    // Add the image to the layout
-    QLabel* imageLabel = new QLabel(ui->frame_3);
+    // Create a new QLabel for the image
+    imageLabel = new QLabel(ui->frame_3);
     imageLabel->setAlignment(Qt::AlignCenter);
     imageLabel->setPixmap(pixmap.scaled(200, 200, Qt::KeepAspectRatio));
-    layout->addWidget(imageLabel);
+
+    // Style the label for centering and a black border
+    imageLabel->setStyleSheet("border: 2px solid black; background-color: white;");
+    imageLabel->setGeometry(ui->frame_3->width() / 2 - 100, ui->frame_3->height() / 2 - 100, 200, 200);
+    imageLabel->setParent(ui->frame_3);
+    imageLabel->show();
 
     currentStep++; // Move to the next step
 }
 
+
 void MainWindow::resetInstructionsFrame()
 {
+    static QLabel* completionLabel = nullptr; // Track the "Scan Complete!" label
+
     // Ensure frame_3 exists
     if (!ui->frame_3) {
         qDebug() << "Error: ui->frame_3 is null.";
         return;
     }
 
-    // Get the existing layout or create a new one if none exists
-    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->frame_3->layout());
-    if (!layout) {
-        layout = new QVBoxLayout(ui->frame_3);
-        ui->frame_3->setLayout(layout); // Set the layout only if it doesn't exist
+    // Show all previously hidden widgets in frame_3
+    QList<QWidget*> children = ui->frame_3->findChildren<QWidget*>();
+    for (QWidget* child : children) {
+        child->show(); // Unhide each child widget
     }
 
-    // Clear all widgets in the layout
-    QLayoutItem* item;
-    while ((item = layout->takeAt(0)) != nullptr) {
-        if (item->widget()) {
-            delete item->widget(); // Delete any widgets
-        }
-        delete item; // Delete the layout item itself
+    // Remove the "Scan Complete!" label if it exists
+    if (completionLabel) {
+        delete completionLabel;
+        completionLabel = nullptr;
     }
 
-    // Add original instructions back to the frame
-    QLabel* instructionsLabel = new QLabel(ui->frame_3);
-    instructionsLabel->setWordWrap(true);
-    layout->addWidget(instructionsLabel); // Add to the existing layout
+    // Hide the "Go Home" button
+    homeButton->hide();
 
     // Reset scanning-related elements
-    homeButton->hide();
-    stepTimer->stop();
-    currentStep = 0;
+    currentStep = 0; // Reset the step counter
 }
+
+
+
 
 
 void MainWindow::populateUserInfoOnPage4() {
