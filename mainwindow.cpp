@@ -30,15 +30,32 @@ MainWindow::MainWindow(QWidget *parent)
     // Connect the Save button to the handleSaveAndCreate slot
     connect(ui->pushButton_save, &QPushButton::clicked, this, &MainWindow::handleSaveAndCreate);
 
+    //menu to history
+    connect(ui->pushButton_6, &QPushButton::clicked, this, [this]() {
+        goToPage(5); // Switch to history page
+    });
+
+    //menu to home
+    connect(ui->pushButton_home, &QPushButton::clicked, this, [this]() {
+        goToPage(4); // Switch to home page
+    });
+
+    //menu to measure
+    connect(ui->pushButton_2, &QPushButton::clicked, this, [this]() {
+        goToPage(6); // Switch to create page
+    });
+
     //menu button
     connect(ui->pushButton_menu, &QPushButton::clicked, this, [this]() {
-        goToPage(3); // Switch to create page
+        goToPage(3); // Switch to menu page
     });
 
     //back buttons
     connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_9, &QPushButton::clicked, this, &MainWindow::goBack);
+    connect(ui->pushButton_10, &QPushButton::clicked, this, &MainWindow::goBack);
+    connect(ui->pushButton_11, &QPushButton::clicked, this, &MainWindow::goBack);
 
 }
 
@@ -162,8 +179,6 @@ void MainWindow::handleLogin(){
     }
 }
 
-
-
 void MainWindow::handleSaveAndCreate()
 {
     // Retrieve input values from the form
@@ -210,13 +225,26 @@ void MainWindow::handleSaveAndCreate()
     int result = SystemInteraction::UserRegistration(firstName, lastName, gender, weight, height, dayOfBirth, monthOfBirth, yearOfBirth, country, email, password);
 
     // Handle the result of registration
-    if (result == -1) { // Assume 0 means success
+    if (result == 0) { // Assume 0 means success
         QMessageBox::information(this, "Registration Successful", "Your profile has been created.");
-        // Optionally navigate to another page
-        ui->stackedWidget->setCurrentIndex(4); // Example: Navigate to a different page
+        //Point to user
+        this->users = JSONInteractor::loadUsers();
+        for (UserInfo* x: users)
+        {
+            if (x->getEmail() == email)
+            {
+                currentUser = x;
+//                SystemInteraction::userScan(x->getEmail(), currentUser);
+                break;
+            }
+        }
+
+        // Navigate to page 4
+        ui->stackedWidget->setCurrentIndex(4);
+
+        // Create the bar graph on page 4
+        createBarGraphLastScan(ui->frame_2); // Replace 'ui->page4' with the appropriate widget name
     } else {
         QMessageBox::warning(this, "Registration Failed", "There was an error creating your profile. Please try again.");
     }
 }
-
-

@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page">
        <widget class="QPushButton" name="pushButton_login">
@@ -492,7 +492,7 @@
           <x>0</x>
           <y>160</y>
           <width>551</width>
-          <height>561</height>
+          <height>491</height>
          </rect>
         </property>
         <property name="frameShape">
@@ -501,7 +501,7 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="pushButton_home">
          <property name="geometry">
           <rect>
            <x>0</x>
@@ -511,7 +511,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>Measure Now</string>
+          <string>Home</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_2">
@@ -524,27 +524,14 @@
           </rect>
          </property>
          <property name="text">
-          <string>Home</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="pushButton_5">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>180</y>
-           <width>551</width>
-           <height>101</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Profiles</string>
+          <string>Measure Now</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_6">
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>270</y>
+           <y>190</y>
            <width>551</width>
            <height>101</height>
           </rect>
@@ -557,20 +544,20 @@
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>370</y>
+           <y>290</y>
            <width>551</width>
            <height>101</height>
           </rect>
          </property>
          <property name="text">
-          <string>Settings</string>
+          <string>Delete Profile</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_8">
          <property name="geometry">
           <rect>
            <x>0</x>
-           <y>460</y>
+           <y>390</y>
            <width>551</width>
            <height>101</height>
           </rect>
@@ -635,6 +622,62 @@
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_6">
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>30</y>
+          <width>141</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>HISTORY LAST 30 DAYS</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_10">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>83</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Back</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_7">
+       <widget class="QLabel" name="label_11">
+        <property name="geometry">
+         <rect>
+          <x>220</x>
+          <y>30</y>
+          <width>141</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Measure Now</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pushButton_11">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>83</width>
+          <height>25</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Back</string>
         </property>
        </widget>
       </widget>
