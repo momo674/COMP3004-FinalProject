@@ -32,6 +32,58 @@ QJsonObject JSONInteractor::createJsonObjFromUser(UserInfo* user, QString passwo
     return obj;
 }
 
+int JSONInteractor::deleteUser(QString Email)
+{
+    //adding user to test.json
+    QJsonDocument doc = getUsersJson();
+    QJsonObject rootObj = doc.object();
+    QJsonArray usersArray = rootObj["Users"].toArray();
+
+    QJsonObject newObj = createJsonObjFromUser(new UserInfo(), QString("tmp_Password"));
+    int flag = -1;
+    for (int i = 0; i < 5; i++)
+    {
+        QJsonObject xObj = usersArray[i].toObject();
+        if (xObj["Email"].toString() == (Email))
+        {
+            usersArray[i] = newObj;
+            rootObj["Users"] = usersArray; // Add the updated usersArray back to rootObj
+
+            writeToUsersJson(QJsonDocument(rootObj));
+            flag = 0;
+            break;
+
+        }
+    }
+
+    if (flag == -1) return flag;
+
+    //adding user to HealthDataUser.json
+    QJsonDocument doc2 = getHealthDataJson();
+    QJsonObject rootObj2 = doc2.object();
+    QJsonArray usersArray2 = rootObj2["Data"].toArray();
+
+    for (int i = 0; i < 5; i++)
+    {
+        QJsonObject xObj = usersArray2[i].toObject();
+        if (xObj["Email"].toString() == Email)
+        {
+
+
+            xObj["Email"] = newObj["Email"];@gmail.com
+            usersArray2[i] = xObj;
+
+            rootObj2["Data"] = usersArray2; // Add the updated usersArray back to rootObj
+
+            writeToHealthDataJson(QJsonDocument(rootObj2));
+            return 0;
+
+        }
+}
+
+return -1;
+}
+
 bool JSONInteractor::checkIfUserInJson(QString Email, QString Password)
 {
     QJsonDocument doc = getUsersJson();
@@ -182,7 +234,6 @@ QList<UserInfo*> JSONInteractor::loadUsers()
     QList<UserInfo*> toReturn;
     QJsonDocument doc = getUsersJson();
     QJsonObject root_obj = doc.object();
-    int currentUsers = root_obj["currentUsers"].toInt();
     QJsonArray userArray = root_obj["Users"].toArray();
 
     for (QJsonValue x : userArray)
@@ -191,7 +242,7 @@ QList<UserInfo*> JSONInteractor::loadUsers()
 
         QString email = xObj["Email"].toString();
 
-        if (!email.contains(QString("tmp_Email")))
+        if (!email.contains(QString("tmp_Email_")))
         {
             toReturn.append(createUserFromJsonObj(xObj));
         }

@@ -39,6 +39,8 @@ public:
 
     static int updateUserHealthData(QString Email, const QList<int>& arr, UserInfo* user);
 
+    static int deleteUser(QString Email);
+
 private:
 
     // Writes a JSON document to the test.json file
