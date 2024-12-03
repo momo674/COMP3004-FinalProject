@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/rado1.jpeg</file>
+        <file>images/image1.png</file>
+        <file>images/image2.png</file>
+        <file>images/image3.png</file>
+        <file>images/image4.png</file>
+        <file>images/image5.png</file>
+        <file>images/image6.png</file>
+        <file>images/image7.png</file>
+        <file>images/image8.png</file>
+        <file>images/image9.png</file>
+        <file>images/image10.png</file>
+        <file>images/image11.png</file>
+        <file>images/image12.png</file>
+        <file>images/image13.png</file>
+        <file>images/image14.png</file>
+        <file>images/image15.png</file>
+        <file>images/image16.png</file>
+        <file>images/image17.png</file>
+        <file>images/image18.png</file>
+        <file>images/image19.png</file>
+        <file>images/image20.png</file>
+        <file>images/image21.png</file>
+        <file>images/image22.png</file>
+        <file>images/image23.png</file>
+        <file>images/image24.png</file>
+        <file>test.json</file>
+    </qresource>
+</RCC>

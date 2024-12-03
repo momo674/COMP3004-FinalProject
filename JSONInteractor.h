@@ -16,6 +16,7 @@ public:
     // Converts a QJsonObject to a UserInfo pointer
     static UserInfo* createUserFromJsonObj(QJsonObject obj);
 
+    static QList<QList<int>> convertHealthDataToList(QJsonObject obj);
     // Converts a UserInfo pointer and password to a QJsonObject
     static QJsonObject createJsonObjFromUser(UserInfo* user, QString password);
 

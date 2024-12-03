@@ -37,10 +37,17 @@ int UserInfo::updateHistory(int day, const QList<int>& arr)
     return 0;
 
 }
+
+void UserInfo::setLast30Days(const QList<QList<int>> list)
+{
+    for (int i = 0; i < 30; i++)
+        for (int j = 0; j < 24; j++)
+            this->last30Days[i][j] = list[i][j];
+}
 QList<int> UserInfo::getLastScan() const
 {
     QList<int> list;
-    for (int x: last30Days[this->validDays])
+    for (int x: last30Days[this->validDays - 1])
         list.append(x);
     return list;
 

@@ -27,6 +27,7 @@ public:
     QList<int> getLastScan() const;
 
     // Setters
+    void setLast30Days(const QList<QList<int>> list);
     void setFirstName(const QString& firstName);
     void setLastName(const QString& lastName);
     void setGender(const QString& gender);

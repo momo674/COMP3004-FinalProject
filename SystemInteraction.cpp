@@ -62,3 +62,36 @@ int SystemInteraction::userScan(QString Email, UserInfo* user)
     //call function to update json
     return JSONInteractor::updateUserHealthData(Email, healthData, user);
 }
+
+QList<int> SystemInteraction::calculateCategoryScores(const QList<int>& inputPoints) {
+    // Ensure inputPoints has 24 values
+    if (inputPoints.size() != 24) {
+        throw std::invalid_argument("Input list must contain exactly 24 points.");
+    }
+
+    // Mapping of 24 points to the 8 categories
+    QList<QList<int>> categoryMappings = {
+        {4, 5},          // Heart: H3L, H3R
+        {0, 1},          // Lungs: H1L, H1R
+        {10, 11},        // Gut: H6L, H6R
+        {20, 21},        // Liver: F2L, F2R
+        {22, 23},        // Kidney: F3L, F3R
+        {8, 9},          // Stomach: F6L, F6R
+        {16, 17},        // Bladder: F4L, F4R
+        {6, 7}           // Lymph: H5L, H5R
+    };
+
+    QList<int> categoryScores;
+
+    // Calculate average score for each category
+    for (const auto& category : categoryMappings) {
+        int sum = 0;
+        for (int pointIndex : category) {
+            sum += inputPoints[pointIndex];
+        }
+        int average = sum / category.size(); // Average the values for the category
+        categoryScores.append(average);     // Add to the output list
+    }
+
+    return categoryScores;
+}

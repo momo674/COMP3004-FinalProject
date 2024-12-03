@@ -12,8 +12,53 @@ UserInfo* JSONInteractor::createUserFromJsonObj(QJsonObject obj)
     int YearOfBirth = obj["YearOfBirth"].toInt();
     QString Country = obj["Country"].toString();
     QString Email = obj["Email"].toString();
-    return new UserInfo(FirstName, LastName, Gender, Weight, Height, DayOfBirth, MonthOfBirth, YearOfBirth, Country, Email);
+    UserInfo* toReturn = new UserInfo(FirstName, LastName, Gender, Weight, Height, DayOfBirth, MonthOfBirth, YearOfBirth, Country, Email);
+    toReturn->setLast30Days(JSONInteractor::convertHealthDataToList(obj));
+    return toReturn;
 }
+
+QList<QList<int>> JSONInteractor::convertHealthDataToList(QJsonObject obj) {
+    QList<QList<int>> list;
+
+    // Access the "Log" array from the JSON object
+    QJsonValue logValue = obj["Log"];
+    if (!logValue.isArray()) {
+        qDebug() << "Error: 'Log' is not a JSON array.";
+        return list;
+    }
+
+    QJsonArray logArray = logValue.toArray();
+
+    // Loop through each object in the "Log" array
+    for (const QJsonValue& nestedObj : logArray) {
+        if (nestedObj.isObject()) {
+            QJsonObject dayObject = nestedObj.toObject();
+
+            // Get the first key (e.g., "Day1") and its associated array
+            QString dayKey = dayObject.keys().first();
+            QJsonValue dayValue = dayObject[dayKey];
+
+            if (dayValue.isArray()) {
+                QJsonArray dayArray = dayValue.toArray();
+                QList<int> dayList;
+
+                // Convert the JSON array to a QList<int>
+                for (const QJsonValue& val : dayArray) {
+                    dayList.append(val.toInt(-1)); // Use -1 as a fallback for invalid values
+                }
+
+                list.append(dayList);
+            } else {
+                qDebug() << "Error: Day" << dayKey << "is not a JSON array.";
+            }
+        } else {
+            qDebug() << "Error: Nested object in 'Log' is not a JSON object.";
+        }
+    }
+
+    return list;
+}
+
 
 QJsonObject JSONInteractor::createJsonObjFromUser(UserInfo* user, QString password)
 {
@@ -70,7 +115,7 @@ int JSONInteractor::deleteUser(QString Email)
         {
 
 
-            xObj["Email"] = newObj["Email"];@gmail.com
+            xObj["Email"] = newObj["Email"];
             usersArray2[i] = xObj;
 
             rootObj2["Data"] = usersArray2; // Add the updated usersArray back to rootObj
@@ -244,6 +289,7 @@ QList<UserInfo*> JSONInteractor::loadUsers()
 
         if (!email.contains(QString("tmp_Email_")))
         {
+            xObj["Log"] = healthDataOfUserJsonObject(email)["Log"];
             toReturn.append(createUserFromJsonObj(xObj));
         }
 

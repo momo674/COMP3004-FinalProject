@@ -18,7 +18,7 @@
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>6</number>
       </property>
       <widget class="QWidget" name="page">
        <widget class="QPushButton" name="pushButton_login">
@@ -585,21 +585,21 @@
        <widget class="QLabel" name="label_9">
         <property name="geometry">
          <rect>
-          <x>80</x>
-          <y>640</y>
-          <width>62</width>
+          <x>20</x>
+          <y>610</y>
+          <width>101</width>
           <height>17</height>
          </rect>
         </property>
         <property name="text">
-         <string>HOME</string>
+         <string>Welcome</string>
         </property>
        </widget>
        <widget class="QPushButton" name="pushButton_menu">
         <property name="geometry">
          <rect>
-          <x>250</x>
-          <y>620</y>
+          <x>230</x>
+          <y>590</y>
           <width>61</width>
           <height>41</height>
          </rect>
@@ -622,6 +622,71 @@
         </property>
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
+        </property>
+       </widget>
+       <widget class="QLabel" name="fname">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>610</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_12">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>660</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Weight (kg)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_13">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>700</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Height (cm)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="weight">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>660</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+       <widget class="QLabel" name="height">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>700</y>
+          <width>101</width>
+          <height>17</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string/>
         </property>
        </widget>
       </widget>
@@ -654,19 +719,6 @@
        </widget>
       </widget>
       <widget class="QWidget" name="page_7">
-       <widget class="QLabel" name="label_11">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>30</y>
-          <width>141</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Measure Now</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="pushButton_11">
         <property name="geometry">
          <rect>
@@ -679,6 +731,78 @@
         <property name="text">
          <string>Back</string>
         </property>
+       </widget>
+       <widget class="QFrame" name="frame_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>40</y>
+          <width>531</width>
+          <height>521</height>
+         </rect>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+         <enum>QFrame::Raised</enum>
+        </property>
+        <widget class="QPushButton" name="pushButton">
+         <property name="geometry">
+          <rect>
+           <x>180</x>
+           <y>380</y>
+           <width>161</width>
+           <height>91</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Continue</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lineEdit_8">
+         <property name="geometry">
+          <rect>
+           <x>190</x>
+           <y>10</y>
+           <width>113</width>
+           <height>25</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>   Instructions</string>
+         </property>
+        </widget>
+        <widget class="QTextEdit" name="textEdit">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>50</y>
+           <width>511</width>
+           <height>301</height>
+          </rect>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;You will be instructed to scan the point on your body shown in the image.&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Each step will show a reference point where you can point your device onto and hold to scan.&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;This process is &lt;span style=&quot; font-weight:600;&quot;&gt;automatic&lt;/span&gt;! Each step takes &lt;span style=&quot; font-weight:600;&quot;&gt;10 seconds&lt;/span&gt; and it will automatically proceed to the next step until the end. &lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Once you are ready, press &amp;quot;&lt;span style=&quot; font-weight:600;&quot;&gt;Continue&lt;/span&gt;&amp;quot; below.        &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    &lt;/p&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;        &lt;img src=&quot;:/images/rado1.jpeg&quot; width=&quot;100&quot; height=&quot;100&quot; /&gt;        &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;  &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="acceptRichText">
+          <bool>true</bool>
+         </property>
+        </widget>
        </widget>
       </widget>
      </widget>

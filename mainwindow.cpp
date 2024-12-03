@@ -2,66 +2,174 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include <QMessageBox>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     users = JSONInteractor::loadUsers();
-    currentUser = NULL;
-    qDebug() << users.size();
+    currentUser = nullptr;
     ui->setupUi(this);
 
-    // Connect the "Create Profile" button to switch to create page
+    currentStep = 0; // Initialize the current step
+    stepTimer = new QTimer(this); // Create a timer for the scanning process
+
+    // Create the "Go Back to Home" button and hide it initially
+    homeButton = new QPushButton("Go Back to Home", this);
+    homeButton->setGeometry(200, 400, 200, 50); // Adjust the position as needed
+    homeButton->hide();
+
+    // Connect the "Continue" button to start the scanning process
+    connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::startScanningProcess);
+
+    // Connect the timer to the function that updates the step
+    connect(stepTimer, &QTimer::timeout, this, &MainWindow::updateScanningStep);
+
+    // Connect the "Go Back to Home" button to reset the frame
+    connect(homeButton, &QPushButton::clicked, this, [this]() {
+        goToPage(4);            // Navigate to home page (Page 4)
+        resetInstructionsFrame(); // Reset the frame to its original state
+    });
+
+    // Your existing connections and initializations
     connect(ui->pushButton_create, &QPushButton::clicked, this, [this]() {
         goToPage(2); // Switch to create page
     });
 
-    // Connect the "Create Profile" button to switch to create page
     connect(ui->pushButton_login, &QPushButton::clicked, this, [this]() {
-        goToPage(1); // Switch to create page
+        goToPage(1); // Switch to login page
     });
 
-    // Optionally set the initial page index (if not set in the UI file)
     ui->stackedWidget->setCurrentIndex(0);
 
-    // Connect the Enter button to the handleLogin slot
     connect(ui->pushButton_enter, &QPushButton::clicked, this, &MainWindow::handleLogin);
-
-    // Connect the Save button to the handleSaveAndCreate slot
     connect(ui->pushButton_save, &QPushButton::clicked, this, &MainWindow::handleSaveAndCreate);
 
-    //menu to history
     connect(ui->pushButton_6, &QPushButton::clicked, this, [this]() {
         goToPage(5); // Switch to history page
     });
 
-    //menu to home
     connect(ui->pushButton_home, &QPushButton::clicked, this, [this]() {
-        goToPage(4); // Switch to home page
+        populateUserInfoOnPage4(); // Populate user info before navigating
+        goToPage(4);              // Switch to Page 4
     });
 
-    //menu to measure
     connect(ui->pushButton_2, &QPushButton::clicked, this, [this]() {
-        goToPage(6); // Switch to create page
+        goToPage(6); // Switch to measure page
     });
 
-    //menu button
     connect(ui->pushButton_menu, &QPushButton::clicked, this, [this]() {
         goToPage(3); // Switch to menu page
     });
 
-    //back buttons
     connect(ui->pushButton_3, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_9, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_10, &QPushButton::clicked, this, &MainWindow::goBack);
     connect(ui->pushButton_11, &QPushButton::clicked, this, &MainWindow::goBack);
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::startScanningProcess()
+{
+    resetInstructionsFrame(); // Clear the frame
+    currentStep = 1;          // Start from step 1
+    stepTimer->start(5000);   // Start the timer (5 seconds per step)
+    updateScanningStep();     // Show the first step
+}
+
+void MainWindow::updateScanningStep()
+{
+    if (currentStep > 24) {
+        stepTimer->stop(); // Stop the timer after the last step
+        homeButton->show(); // Show the "Go Back to Home" button
+        return;
+    }
+
+    // Load the pixmap for the current step
+    QPixmap pixmap(QString(":/images/image%1.png").arg(currentStep));
+    if (pixmap.isNull()) {
+        qDebug() << "Error: Could not load image for step" << currentStep;
+        stepTimer->stop();
+        return;
+    }
+
+    // Clear the layout
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->frame_3->layout());
+    if (!layout) {
+        layout = new QVBoxLayout(ui->frame_3);
+        ui->frame_3->setLayout(layout);
+    }
+
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+
+    // Add the image to the layout
+    QLabel* imageLabel = new QLabel(ui->frame_3);
+    imageLabel->setAlignment(Qt::AlignCenter);
+    imageLabel->setPixmap(pixmap.scaled(200, 200, Qt::KeepAspectRatio));
+    layout->addWidget(imageLabel);
+
+    currentStep++; // Move to the next step
+}
+
+void MainWindow::resetInstructionsFrame()
+{
+    // Ensure frame_3 exists
+    if (!ui->frame_3) {
+        qDebug() << "Error: ui->frame_3 is null.";
+        return;
+    }
+
+    // Get the existing layout or create a new one if none exists
+    QVBoxLayout* layout = qobject_cast<QVBoxLayout*>(ui->frame_3->layout());
+    if (!layout) {
+        layout = new QVBoxLayout(ui->frame_3);
+        ui->frame_3->setLayout(layout); // Set the layout only if it doesn't exist
+    }
+
+    // Clear all widgets in the layout
+    QLayoutItem* item;
+    while ((item = layout->takeAt(0)) != nullptr) {
+        if (item->widget()) {
+            delete item->widget(); // Delete any widgets
+        }
+        delete item; // Delete the layout item itself
+    }
+
+    // Add original instructions back to the frame
+    QLabel* instructionsLabel = new QLabel(ui->frame_3);
+    instructionsLabel->setWordWrap(true);
+    layout->addWidget(instructionsLabel); // Add to the existing layout
+
+    // Reset scanning-related elements
+    homeButton->hide();
+    stepTimer->stop();
+    currentStep = 0;
+}
+
+
+void MainWindow::populateUserInfoOnPage4() {
+    if (currentUser) {
+        // Update text boxes on Page 4 with currentUser details
+        ui->fname->setText(currentUser->getFirstName());
+        ui->height->setText(QString::number(currentUser->getWeight()));
+        ui->weight->setText(QString::number(currentUser->getHeight()));
+    } else {
+        QMessageBox::warning(this, "No User Data", "No user is currently logged in.");
+    }
 }
 
 void MainWindow::createBarGraphLastScan(QWidget *targetFrame) {
@@ -75,18 +183,18 @@ void MainWindow::createBarGraphLastScan(QWidget *targetFrame) {
         delete targetFrame->layout();
     }
 
-    // Get the data for the bar graph (24 elements)
+    // Get the data for the bar graph (8 elements)
     QList<int> dataArray = currentUser->getLastScan();
-    qDebug() << dataArray;
-    // Ensure the dataArray has 24 elements (for safety)
-    if (dataArray.size() != 24) {
-        qDebug() << "Error: Data array does not contain exactly 24 elements.";
+    QList<int> scores = SystemInteraction::calculateCategoryScores(dataArray);
+
+    if (scores.size() != 8) {
+        qDebug() << "Error: Scores array does not contain exactly 8 elements.";
         return;
     }
 
-    // Create QBarSet and populate it with data
+    // Create QBarSet and populate it with scores
     QtCharts::QBarSet *barSet = new QtCharts::QBarSet("Last Scan");
-    for (int value : dataArray) {
+    for (int value : scores) {
         *barSet << value;
     }
 
@@ -100,22 +208,28 @@ void MainWindow::createBarGraphLastScan(QWidget *targetFrame) {
     chart->setTitle("Last Scan Results");
     chart->setAnimationOptions(QtCharts::QChart::SeriesAnimations);
 
-    // Configure X-axis for 1 to 24
+    // Configure X-axis with custom labels (8 categories)
     QStringList categories;
-    for (int i = 1; i <= 24; ++i) {
-        categories << QString::number(i);
-    }
+    categories << "Heart" << "Lungs" << "Gut" << "Liver" << "Kidney"
+               << "Stomach" << "Bladder" << "Lymph";
+
     QtCharts::QBarCategoryAxis *axisX = new QtCharts::QBarCategoryAxis();
     axisX->append(categories);
+    axisX->setLabelsVisible(true); // Ensure all labels are visible
+    axisX->setLabelsAngle(45);     // Rotate labels to prevent overlap
     chart->addAxis(axisX, Qt::AlignBottom);
     series->attachAxis(axisX);
 
     // Configure Y-axis for range 0 to 100
     QtCharts::QValueAxis *axisY = new QtCharts::QValueAxis();
-    axisY->setRange(0, 100); // Set Y-axis range from 0 to 100
-    axisY->setTitleText("Value (%)");
+    axisY->setRange(0, 100);
+    axisY->setTitleText("Score");
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
+
+    // Adjust chart margins for better fit
+    chart->setMargins(QMargins(10, 10, 10, 10));
+    chart->legend()->setVisible(false); // Hide legend if not needed
 
     // Create QChartView for rendering the chart
     QtCharts::QChartView *chartView = new QtCharts::QChartView(chart);
@@ -126,6 +240,7 @@ void MainWindow::createBarGraphLastScan(QWidget *targetFrame) {
     layout->addWidget(chartView);
     targetFrame->setLayout(layout);
 }
+
 
 
 // Function to navigate to a page and save the previous page in history
@@ -170,6 +285,7 @@ void MainWindow::handleLogin(){
         }
 
         // Navigate to page 4
+        populateUserInfoOnPage4(); // Populate user info before navigating
         ui->stackedWidget->setCurrentIndex(4);
 
         // Create the bar graph on page 4
@@ -240,6 +356,8 @@ void MainWindow::handleSaveAndCreate()
         }
 
         // Navigate to page 4
+        populateUserInfoOnPage4(); // Populate user info before navigating
+
         ui->stackedWidget->setCurrentIndex(4);
 
         // Create the bar graph on page 4

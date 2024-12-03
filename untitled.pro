@@ -29,8 +29,12 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+RESOURCES += images \
+    resources.qrc
+
 DISTFILES += \
     HealthDataUser.json \
+    images/rado1.jpeg \
     test.json
 # Copy test.json to the build directory
 CONFIG += in_source_build

@@ -16,6 +16,7 @@ public:
     static bool UserLogin(QString Email, QString Password);
     static int getHealthDataofUser(QString Email, int (&array)[30][24]);
     static int userScan(QString Email, UserInfo* user);
+    static QList<int> calculateCategoryScores(const QList<int>& inputPoints);
 };
 
 #endif // SYSTEMINTERACTION_H

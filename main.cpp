@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
 //    test 2: log in
 //    bool result2 = SystemInteraction::UserLogin("mohparrot@gmail.com", "123poop");
 //    qDebug() << result2;
-    qDebug() << JSONInteractor::deleteUser("mmm");
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
